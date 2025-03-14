@@ -46,7 +46,7 @@ class Algolia {
         applicationId: applicationId,
         apiKey: _apiKey,
         extraHeaders: _headers,
-        extraUserAgents: _userAgents,
+        extraUserAgents: [],
       );
 
   String get _host => 'https://$applicationId-dsn.algolia.net/1/';
@@ -64,11 +64,18 @@ class Algolia {
   }
 
   Map<String, String> get _headers {
+    String userAgent = "";
+    try {
+      userAgent = _userAgents.join(";");
+    } catch(_) {
+      userAgent = "Algolia for Dart (unofficial)";
+    }
+
     var map = <String, String>{
       'X-Algolia-Application-Id': applicationId,
       'X-Algolia-API-Key': _apiKey,
       'Content-Type': 'application/json',
-      'User-Agent': _userAgents.join(";"),
+      'User-Agent': userAgent,
     };
     map.addEntries(extraHeaders.entries);
     return map;
